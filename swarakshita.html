@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swarakshita</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&family=Merriweather:wght@300;400;700&family=Montserrat:wght@300;400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        header {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            transition: all 0.5s ease;
+        }
+        
+        header.scrolled {
+            background-color: rgba(0, 0, 0, 0.95);
+            padding: 1rem;
+        }
+        
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .story-container {
+            padding-top: 150px;
+        }
+        
+        .story-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2rem 10%;
+            position: relative;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1s, transform 1s;
+        }
+        
+        .story-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Section-specific backgrounds and styles */
+        #childhood {
+            background: linear-gradient(to right, #FFF1D0, #FFD4D4);
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        #childhood .story-text {
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(255, 182, 193, 0.4);
+            border: 3px solid #FFB6C1;
+        }
+        
+        #childhood .story-text h2 {
+            color: #FF69B4;
+        }
+        
+        #childhood .story-image {
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+            animation: float 3s ease-in-out infinite;
+            border: 5px solid white;
+        }
+        
+        #adulthood {
+            background: linear-gradient(to right, #D3D3D3, #A9A9A9);
+            font-family: 'Merriweather', serif;
+        }
+        
+        #adulthood .story-text {
+            background-color: rgba(245, 245, 245, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        #adulthood .story-text h2 {
+            color: #555;
+        }
+        
+        #adulthood .story-image {
+            filter: saturate(0.8);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s ease;
+        }
+        
+        #adulthood.visible .story-image {
+            animation: slowPulse 4s ease-in-out infinite;
+        }
+        
+        #acceptance {
+            background: linear-gradient(to right, #E6F7FF, #B3E0FF);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        #acceptance .story-text {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(100, 181, 246, 0.3);
+            border: 2px solid #64B5F6;
+        }
+        
+        #acceptance .story-text h2 {
+            color: #1976D2;
+        }
+        
+        #acceptance .story-image {
+            border-radius: 50%;
+            box-shadow: 0 10px 30px rgba(25, 118, 210, 0.4);
+            transition: all 0.5s ease;
+        }
+        
+        #acceptance.visible .story-image {
+            animation: glow 3s ease-in-out infinite;
+        }
+        
+        #reality {
+            background: linear-gradient(to right, #424242, #212121);
+            color: #E0E0E0;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        #reality .story-text {
+            background-color: rgba(33, 33, 33, 0.9);
+            border-radius: 5px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            border-left: 3px solid #FF5252;
+            color: #E0E0E0;
+        }
+        
+        #reality .story-text h2 {
+            color: #FF5252;
+        }
+        
+        #reality .story-image {
+            filter: contrast(1.2) grayscale(0.4);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+        
+        #reality.visible .story-image {
+            animation: shake 10s ease-in-out infinite;
+        }
+        
+        .story-section:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        
+        .story-image {
+            width: 45%;
+            height: 70vh;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .story-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .story-image:hover img {
+            transform: scale(1.05);
+        }
+        
+        .story-text {
+            width: 45%;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+        }
+        
+        .story-text h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .story-text p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+        
+        .progress-container {
+            position: fixed;
+            top: 0;
+            z-index: 200;
+            width: 100%;
+            height: 8px;
+            background: transparent;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: linear-gradient(to right, #FF69B4, #1976D2, #FF5252);
+            width: 0%;
+        }
+        
+        .final-message {
+            padding: 5rem 10%;
+            text-align: center;
+            background-color: #303030;
+            color: white;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .final-message h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, #FF69B4, #1976D2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        
+        .final-message p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.7;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(to right, #FF69B4, #1976D2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes slowPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes glow {
+            0% { box-shadow: 0 0 20px rgba(25, 118, 210, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(25, 118, 210, 0.8); }
+            100% { box-shadow: 0 0 20px rgba(25, 118, 210, 0.5); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            1%, 3%, 5%, 7% { transform: translateX(-5px); }
+            2%, 4%, 6%, 8% { transform: translateX(5px); }
+            9%, 100% { transform: translateX(0); }
+        }
+        
+        .candy-animation {
+            position: absolute;
+            top: -50px;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            z-index: -1;
+            opacity: 0.6;
+        }
+        
+        .candy {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #FF69B4, #FF1493);
+            animation: fallCandy 10s linear infinite;
+        }
+        
+        @keyframes fallCandy {
+            0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(120vh) rotate(360deg); opacity: 0; }
+        }
+        
+        .tear-drop {
+            position: absolute;
+            width: 15px;
+            height: 20px;
+            background: radial-gradient(circle at 50% 0%, #B3E0FF, #1976D2);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: fallTear 8s linear infinite;
+            opacity: 0.7;
+        }
+        
+        @keyframes fallTear {
+            0% { transform: translateY(-20px) rotate(5deg); opacity: 0.7; }
+            100% { transform: translateY(100vh) rotate(-5deg); opacity: 0; }
+        }
+        
+        .butterfly {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%231976D2' d='M12.005 2a6 6 0 0 0-4.243 10.243c.587.587 1.243 1.044 2.04 1.401C8.63 14.634 8 16.007 8 17.428v.1a2.6 2.6 0 0 0-2.5-.55l-.1.021v-2.14a.75.75 0 0 0-1.5 0V17c0 1.12.88 2.02 2 2.1h3.773l-3.773 1.265V22h4.5c1.704 0 3.113-1.28 3.296-2.936.184 1.655 1.592 2.936 3.296 2.936h4.5v-1.635l-3.773-1.266H19c1.12-.08 2-.98 2-2.099v-2.14a.75.75 0 0 0-1.5 0v2.14l-.1-.022a2.6 2.6 0 0 0-2.5.55v-.1c0-1.42-.63-2.794-1.802-3.784a5.61 5.61 0 0 0 2.04-1.4A6 6 0 0 0 12.005 2zm0 1.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9z'/%3E%3C/svg%3E") no-repeat center center/contain;
+            animation: flyButterfly 15s linear infinite;
+        }
+        
+        @keyframes flyButterfly {
+            0% { transform: translate(-20px, 50vh) rotate(0deg); opacity: 0.8; }
+            25% { transform: translate(25vw, 30vh) rotate(10deg); opacity: 1; }
+            50% { transform: translate(50vw, 60vh) rotate(-10deg); opacity: 1; }
+            75% { transform: translate(75vw, 40vh) rotate(10deg); opacity: 1; }
+            100% { transform: translate(120vw, 30vh) rotate(0deg); opacity: 0.8; }
+        }
+        
+        .shadow-figure {
+            position: absolute;
+            width: 40px;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 50% 50% 0 0;
+            filter: blur(5px);
+            animation: moveShadow 20s linear infinite;
+            opacity: 0;
+        }
+        
+        @keyframes moveShadow {
+            0% { transform: translateX(-50px); opacity: 0; }
+            10% { opacity: 0.3; }
+            45% { opacity: 0.3; }
+            50% { transform: translateX(120vw); opacity: 0; }
+            100% { transform: translateX(120vw); opacity: 0; }
+        }
+        
+        @media (max-width: 768px) {
+            .story-section {
+                flex-direction: column;
+                height: auto;
+                padding: 4rem 5%;
+            }
+            
+            .story-section:nth-child(even) {
+                flex-direction: column;
+            }
+            
+            .story-image, .story-text {
+                width: 100%;
+                margin-bottom: 2rem;
+            }
+            
+            .story-image {
+                height: 50vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    
+    <header id="header">
+        <h1>Swarakshita</h1>
+        <p>A journey through innocence, growth, and truth</p>
+    </header>
+    
+    <div class="story-container">
+        <!-- Childhood Section -->
+        <section id="childhood" class="story-section">
+            <div class="candy-animation" id="candyContainer"></div>
+            <div class="story-image">
+                <img src="https://lh3.googleusercontent.com/gg/AN12HXTcrqLhJoS2V-vvYq_bGW2PNBLltQE8p2TczvLKZgzgzFqhP1vITsoL-RX1q_zHlGmsww3YcJvfJPSrVHxA5u5eFFtTeVRU1VrSecI4S78c_mvQMDh3zfOxQEA70KXgiuYoGmKFttPelkv-clEGfOxg97b96LWJZOLrkGJKoepc5mos0G4o" alt="Young girl in a candy shop with her father">
+            </div>
+            <div class="story-text">
+                <h2>Sweet Innocence</h2>
+                <p>The candy shop glows with a kaleidoscope of colors as a young girl's eyes widen with delight. Her father smiles down at her, their hands linked in a bond of trust and protection. The world is simple here—just sweetness and joy.</p>
+                <p>Childhood is a garden of wonder, where every day brings new discoveries and simple pleasures. Her laughter rings like tiny bells as she points to colorful jars filled with treats, each one a treasure in her innocent eyes.</p>
+            </div>
+        </section>
+        
+        <!-- Adulthood Section -->
+        <section id="adulthood" class="story-section">
+            <div class="story-image">
+                <img src="https://lh3.googleusercontent.com/gg/AN12HXTuYfFChrdOUrxS4e4Bo3S1ytmyTseoo428qGhvzKjdkQ60LXrEZuT3UE0YM69XOul4-rFK2z73u4oV5nhb0peavIzhhKebfhV3aru8aQrgtsoUT04KvGNA3RHlIaa0H1UyUNcixapIwGk84ipcvWl7f69-ko_WgIcUkYh7GLSG2NTuO2mXmX-G--KLtfKSlw-TqSoe6SgF9luvZKXaguWh71VANne7LTByupYUuB5kqfVAoNpVcTz8MRmjGAv1YbHiAoM4sYdroYh8zT8xbRghQTw0W1dFuIDa6s2r7xxoeFXwrNnYrFYZCYHySPovsIqEBPD1F50LjjBBRHRX9Zi7?authuser=1" alt="Young woman facing the challenges of adulthood">
+            </div>
+            <div class="story-text">
+                <h2>The Changing Seasons</h2>
+                <p>In the mirror, a stranger gazes back,</p>
+                   <p> A body in flux, emotions in disarray.</p>
+                   <p> Childhood recedes like a distant shore,</p>
+                   <p> As puberty's tide washes over her soul.</p>
+                   <p> The candy shop fades into a distant memory,</p>
+                  <p> A relic of a life now left behind.</p>
+            </div>
+        </section>
+        
+        <!-- Acceptance Section -->
+        <section id="acceptance" class="story-section">
+            <div class="story-image">
+                <img src="/api/placeholder/800/600" alt="Woman embracing herself and her identity">
+            </div>
+            <div class="story-text">
+                <h2>Embracing the Self</h2>
+                <p>Light returns gradually, like dawn after a long night. She stands before the mirror again, but this time with new eyes. The changes that once felt like impositions now appear as gifts—strength in her limbs, depth in her thoughts, a voice that carries weight.</p>
+                <p>She touches her reflection with gentle fingertips, tracing the contours of her becoming. There is power in acceptance, in claiming one's form and spirit. She is not what the world says she should be—she is gloriously, authentically herself.</p>
+            </div>
+        </section>
+        
+        <!-- Reality Section -->
+        <section id="reality" class="story-section">
+            <div class="shadow-figure" id="shadowContainer"></div>
+            <div class="story-image">
+                <img src="https://lh3.googleusercontent.com/gg-dl/AA8i_VLx5rM72XHJIMxp-R_1shQlT0DenFu7XNhzrZoLqXz3JaWOC-HOo60RyO_JTNd0ssg7lQIM9NdvfJcYvVUzxsmdoddG_QuyLk3uOPEGlYwXKTsSWqZw2vPnFkO_iP1CWMUoDGosHahS8ssfRpXO2zr0JLSLjoFHPbrmKbFsKGTDlBkrlQ" alt="Dark representation of societal challenges">
+            </div>
+            <div class="story-text">
+                <h2>The Uncomfortable Truth</h2>
+                <p>A whispered word, a hand upon her arm,</p>
+                  <p> A power imbalance, a silent storm.</p>
+                  <p> Her boss, a predator, takes what he can,</p>
+                   <p>Leaving her broken, a shattered woman.</p>
+                <p>Her innocence wasn't lost; it was taken—by whispered comments, by hands that reached where they weren't invited, by a culture that too often values girls for their bodies rather than their minds. Yet in this darkness, a flame of resistance burns. Her story will not end in silence.</p>
+            </div>
+        </section>
+        <section id="reality2" class="story-section">
+            <div class="story-image">
+                <img src="/api/placeholder/800/600" alt="Woman embracing herself and her identity">
+            </div>
+            <div class="story-text">
+                <h2>Killing of innocence</h2>
+                <p>Light returns gradually, like dawn after a long night. She stands before the mirror again, but this time with new eyes. The changes that once felt like impositions now appear as gifts—strength in her limbs, depth in her thoughts, a voice that carries weight.</p>
+                <p>She touches her reflection with gentle fingertips, tracing the contours of her becoming. There is power in acceptance, in claiming one's form and spirit. She is not what the world says she should be—she is gloriously, authentically herself.</p>
+            </div>
+        </section>
+        
+        <!-- Final Message Section -->
+        <section class="final-message">
+            <h2>Beyond the Darkness</h2>
+            <p>Every girl deserves to grow in safety, to transform without fear, to be valued for her complete humanity. The journey from innocence to wisdom shouldn't require surviving violation.</p>
+            <p>Our society must change its narrative—must protect the vulnerable while empowering them to rise. The true measure of our civilization is how we treat those we could easily harm.</p>
+            <a href="#" class="cta-button">Stand for Protection</a>
+        </section>
+    </div>
+    
+    <script>
+        // Progress bar functionality
+        window.onscroll = function() {
+            updateProgressBar();
+            checkHeaderScroll();
+            revealSections();
+        };
+        
+        function updateProgressBar() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        }
+        
+        function checkHeaderScroll() {
+            const header = document.getElementById("header");
+            if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+                header.classList.add("scrolled");
+            } else {
+                header.classList.remove("scrolled");
+            }
+        }
+        
+        // Reveal sections as they come into view
+        function revealSections() {
+            const sections = document.querySelectorAll('.story-section');
+            
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (sectionTop < windowHeight * 0.75) {
+                    section.classList.add('visible');
+                }
+            });
+        }
+        
+        // Create candy animation for childhood section
+        function createCandyAnimation() {
+            const container = document.getElementById('candyContainer');
+            const colors = ['#FF69B4', '#FFB6C1', '#FFC0CB', '#FF1493', '#FF77FF', '#FFACFC'];
+            
+            for (let i = 0; i < 20; i++) {
+                const candy = document.createElement('div');
+                candy.classList.add('candy');
+                candy.style.left = `${Math.random() * 100}%`;
+                candy.style.animationDelay = `${Math.random() * 10}s`;
+                candy.style.animationDuration = `${Math.random() * 5 + 7}s`;
+                candy.style.background = colors[Math.floor(Math.random() * colors.length)];
+                container.appendChild(candy);
+            }
+        }
+        
+        // Create shadow figures for reality section
+        function createShadowFigures() {
+            const container = document.getElementById('shadowContainer');
+            
+            for (let i = 0; i < 5; i++) {
+                const shadow = document.createElement('div');
+                shadow.classList.add('shadow-figure');
+                shadow.style.top = `${Math.random() * 80 + 10}%`;
+                shadow.style.animationDelay = `${Math.random() * 5 + i * 4}s`;
+                container.appendChild(shadow);
+            }
+        }
+        
+        // Create butterflies for acceptance section
+        function createButterflies() {
+            const acceptanceSection = document.getElementById('acceptance');
+            const colors = ['#1976D2', '#64B5F6', '#2196F3', '#0D47A1', '#90CAF9'];
+            
+            for (let i = 0; i < 7; i++) {
+                const butterfly = document.createElement('div');
+                butterfly.classList.add('butterfly');
+                butterfly.style.top = `${Math.random() * 80 + 10}%`;
+                butterfly.style.animationDelay = `${Math.random() * 5 + i * 2}s`;
+                acceptanceSection.appendChild(butterfly);
+            }
+        }
+        
+        // Create tears for adulthood section
+        function createTears() {
+            const adulthoodSection = document.getElementById('adulthood');
+            
+            for (let i = 0; i < 10; i++) {
+                const tear = document.createElement('div');
+                tear.classList.add('tear-drop');
+                tear.style.left = `${Math.random() * 100}%`;
+                tear.style.animationDelay = `${Math.random() * 8}s`;
+                adulthoodSection.appendChild(tear);
+            }
+        }
+        
+        // Initial call to reveal sections and set up animations
+        window.addEventListener('DOMContentLoaded', function() {
+            revealSections();
+            createCandyAnimation();
+            createTears();
+            createButterflies();
+            createShadowFigures();
+        });
+    </script>
+</body>
+</html>
